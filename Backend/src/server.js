@@ -1,20 +1,27 @@
 import mongoose from "mongoose";
 import { app } from "./app.js";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 
 dotenv.config({
-  path: './.env' 
-})  
+  path: "./.env",
+});
 
+app.get("/", (req, res) => {
+  res.send("hello world ");
+});
 
-app.get("/", (req,res) => {
-  res.send("hello world ")
-})
+connectDB() 
+  .then(() => {
+    app.on("error", (error) => {
+      console.log("error:", error);
+      throw error; 
+    }); 
 
-connectDB()
-
-
-app.listen(process.env.PORT || 4000 , () => {
-  console.log(`server is running on port : ${process.env.PORT}`);
-})
+    app.listen(process.env.PORT || 4000, () => {
+      console.log(`server is running on port : ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MondoDB connection failed !!!", err);
+  });
